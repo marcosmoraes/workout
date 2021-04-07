@@ -1,4 +1,3 @@
-
 [![CircleCI](https://circleci.com/gh/marcospsmoraes/workout.svg?style=svg&circle-token=Ybd0fb9297236ee5bf0fb8802e543992d030ffbc7)](https://circleci.com/gh/marcospsmoraes/workout)
 
 <p align="center">
