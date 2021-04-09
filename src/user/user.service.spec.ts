@@ -1,7 +1,7 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
-import { NotFoundException, BadRequestException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { User } from './schemas/user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
 
@@ -55,25 +55,20 @@ describe('UserService', () => {
     });
   })
 
-  describe('#users', () => {
-    it('should return all users', async () => {
-      mockUserModel.find.mockReturnValue(mockUser);
-      const users = await userService.findAll();
-      expect(users).toHaveLength(1);
-      expect(mockUserModel.find).toHaveBeenCalledTimes(1);
-    });
-  })
-
   describe('#usersById', () => {
     it('should find an existing user', async () => {
-      mockUserModel.findOne.mockReturnValue(mockUser[0]);
+      mockUserModel.findOne.mockImplementationOnce(() => ({
+        lean: jest.fn().mockReturnValue(mockUser[0]),
+      }));
       const userFound = await userService.findOne('1');
       expect(userFound).toMatchObject({ id: '1', name: 'Marcos' });
       expect(mockUserModel.findOne).toHaveBeenCalledTimes(1);
 
     });
     it('should return an exception when does not to find an user', async () => {
-      mockUserModel.findOne.mockReturnValue(null);
+      mockUserModel.findOne.mockImplementationOnce(() => ({
+        lean: jest.fn().mockReturnValue(null),
+      }));
       expect(userService.findOne('1')).rejects.toBeInstanceOf(NotFoundException);
       expect(mockUserModel.findOne).toHaveBeenCalledTimes(1);
     });
@@ -81,8 +76,8 @@ describe('UserService', () => {
 
   describe('#updateUser', () => {
     let dto = new CreateUserDto()
-      dto.name = 'Marcos'
-      dto.age = 9
+    dto.name = 'Marcos'
+    dto.age = 9
     it('should update an user', async () => {
       mockUserModel.findByIdAndUpdate.mockReturnValue(mockUser)
       const updatedUser = await userService.update('1', dto)
@@ -99,8 +94,8 @@ describe('UserService', () => {
 
   describe('#removeUser', () => {
     let dto = new CreateUserDto()
-      dto.name = 'Marcos'
-      dto.age = 9
+    dto.name = 'Marcos'
+    dto.age = 9
     it('should remove an user', async () => {
       mockUserModel.findByIdAndRemove.mockReturnValue(mockUser)
       const removedUser = await userService.remove('1')

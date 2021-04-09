@@ -1,29 +1,31 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User, UserDocument } from './schemas/user.schema';
+import { User } from './schemas/user.schema';
+import { IUser } from './user-interface';
+
 
 @Injectable()
 export class UserService {
 
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) { }
+  constructor(@InjectModel(User.name) private readonly userModel: Model<IUser>) { }
 
-  async create(createUserDto: CreateUserDto) {
-    return this.userModel.create(createUserDto);
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const createdUser = await this.userModel.create(createUserDto);
+    if (!createdUser) {
+      throw new InternalServerErrorException
+    }
+    return new User(createdUser.toJSON());
   }
 
-  async findAll(): Promise<User[]> {
-    return this.userModel.find();
-  }
-
-  async findOne(id: string): Promise<CreateUserDto | null> {
-    const user = await this.userModel.findOne({ _id: Object(id) });
-    if (!user) {
+  async findOne(id: string): Promise<User> {
+    const foundUser = await this.userModel.findOne({ _id: Object(id) }).exec();
+    if (!foundUser) {
       throw new NotFoundException('User not found')
     }
-    return user
+    return new User(foundUser.toJSON())
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {

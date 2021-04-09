@@ -1,17 +1,30 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Exclude } from 'class-transformer';
+import { BaseDBObject } from '../../common/model/base-db-object.model';
+import * as mongoose from 'mongoose';
 
-export type UserDocument = User & Document;
+//https://stackoverflow.com/questions/59547243/create-dtos-bos-and-daos-for-nestjs-rest-api?newreg=05d22af89e8246248da7472e8ae141b0
 
-@Schema()
-export class User extends Document {
+export const UserSchema = new mongoose.Schema({
+    name: String,
+    age: Number,
+    email: String,
+    password: String,
+});
 
-    @Prop()
+export class User extends BaseDBObject {
+
     name!: string;
 
-    @Prop()
     age!: number;
 
-}
+    email!: string
 
-export const UserSchema = SchemaFactory.createForClass(User);
+    @Exclude()
+    password!: string
+
+    constructor(partial: Partial<User> = {}) {
+        super();
+        Object.assign(this, partial);
+    }
+
+}
