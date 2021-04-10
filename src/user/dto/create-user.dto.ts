@@ -19,4 +19,5 @@ export class CreateUserDto {
     @IsString()
     @IsNotEmpty({ message: 'Password cannot be null or empty' })
     password!: string
+
 }

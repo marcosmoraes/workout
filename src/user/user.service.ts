@@ -5,6 +5,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './schemas/user.schema';
 import { IUser } from './user-interface';
+import * as bcrypt from 'bcrypt';
 
 
 @Injectable()
@@ -13,6 +14,10 @@ export class UserService {
   constructor(@InjectModel(User.name) private readonly userModel: Model<IUser>) { }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
+    const user = new User()
+    const salt = await bcrypt.genSalt()
+    const pwdDto = createUserDto.password
+    createUserDto.password = await user.createHashPassword(pwdDto, salt);
     const createdUser = await this.userModel.create(createUserDto);
     if (!createdUser) {
       throw new InternalServerErrorException

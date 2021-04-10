@@ -8,7 +8,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 
 const mockUser = [{
   id: '1',
-  name: 'Marcos'
+  name: 'Marcos',
+  age: 39,
+  email: 'marcospsmoraes@gmail.com'
 }]
 
 describe('UserService', () => {
@@ -58,7 +60,7 @@ describe('UserService', () => {
   describe('#usersById', () => {
     it('should find an existing user', async () => {
       mockUserModel.findOne.mockImplementationOnce(() => ({
-        lean: jest.fn().mockReturnValue(mockUser[0]),
+        exec: jest.fn().mockReturnValue(mockUser[0]),
       }));
       const userFound = await userService.findOne('1');
       expect(userFound).toMatchObject({ id: '1', name: 'Marcos' });
@@ -67,7 +69,7 @@ describe('UserService', () => {
     });
     it('should return an exception when does not to find an user', async () => {
       mockUserModel.findOne.mockImplementationOnce(() => ({
-        lean: jest.fn().mockReturnValue(null),
+        exec: jest.fn().mockReturnValue(null),
       }));
       expect(userService.findOne('1')).rejects.toBeInstanceOf(NotFoundException);
       expect(mockUserModel.findOne).toHaveBeenCalledTimes(1);
