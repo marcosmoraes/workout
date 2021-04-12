@@ -6,12 +6,13 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './schemas/user.schema';
 import { IUser } from './user-interface';
 import * as bcrypt from 'bcrypt';
+import { UserRepository } from './user.repository';
 
 
 @Injectable()
 export class UserService {
 
-  constructor(@InjectModel(User.name) private readonly userModel: Model<IUser>) { }
+  constructor(@InjectModel(User.name) private readonly userModel: Model<IUser>, private readonly userRepository: UserRepository) { }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const user = new User()
@@ -47,5 +48,13 @@ export class UserService {
       throw new NotFoundException('User not found')
     }
     return removedUser
+  }
+
+  async findByEmail(email: string): Promise<User> {
+    try {
+      return this.userRepository.findByEmail(email)
+    } catch (error) {
+      return error
+    }
   }
 }

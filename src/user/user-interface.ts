@@ -5,5 +5,4 @@ export interface IUser extends mongoose.Document {
   age: number
   email: string
   password: string
-  salt: string
 }
