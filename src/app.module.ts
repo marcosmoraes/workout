@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { FitnessTestModule } from './fitness-test/fitness-test.module';
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { AuthModule } from './auth/auth.module';
         envFilePath: ['.env'],
         isGlobal: true
       }
-    )
+    ),
+    FitnessTestModule
   ]
 })
 export class AppModule { }

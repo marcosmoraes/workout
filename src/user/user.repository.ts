@@ -1,8 +1,8 @@
-import { User } from './schemas/user.schema';
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { User } from './schema/user.schema';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { IUser } from './user-interface';
+import { IUser } from './user.interface';
 
 @Injectable()
 export class UserRepository {

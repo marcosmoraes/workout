@@ -2,7 +2,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
 import { NotFoundException } from '@nestjs/common';
-import { User } from './schemas/user.schema';
+import { User } from './schema/user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
 
 
