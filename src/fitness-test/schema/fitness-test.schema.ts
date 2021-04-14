@@ -16,7 +16,9 @@ export const FitnessTestSchema = new mongoose.Schema({
     leftThighCircumference: Number,
     rightThighCircumference: Number,
     leftCalfCircumference: Number,
-    rightCalfCircumference: Number
+    rightCalfCircumference: Number,
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now }
 });
 export class FitnessTest extends BaseDBObject {
 
